@@ -5,7 +5,7 @@ from astroquery.jplhorizons import Horizons
 import os
 import re
 
-
+app = Flask(__name__)
 
 @app.route('/')
 def index():
