@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 import matplotlib.pyplot as plt
 import numpy as np
-import py_astrolab as astrolab
+from astroquery.jplhorizons import Horizons
 import os
 
 app = Flask(__name__)
@@ -19,9 +19,20 @@ def generate():
     return render_template('index.html', message="Círculo lunar generado con éxito")
 
 def obtener_datos_luna(fecha, lugar):
-    al = astrolab.Astrolab(fecha, lugar)
-    datos_luna = al.get_lunar_data()
+    # Aquí usamos JPL Horizons para obtener los datos de la Luna
+    obj = Horizons(id='301', location=lugar, epochs=fecha, id_type='majorbody')
+    eph = obj.ephemerides()
+    datos_luna = {
+        'fase': eph['illumination'][0],  # Porcentaje de iluminación de la Luna
+        'signo': obtener_signo_zodiacal(eph['RA'][0])
+    }
     return datos_luna
+
+def obtener_signo_zodiacal(ra):
+    # Función simplificada para obtener el signo zodiacal basado en la Ascensión Recta (RA)
+    signos = ['Aries', 'Tauro', 'Géminis', 'Cáncer', 'Leo', 'Virgo', 'Libra', 'Escorpio', 'Sagitario', 'Capricornio', 'Acuario', 'Piscis']
+    indice = int((ra / 30) % 12)
+    return signos[indice]
 
 def generar_circulo_lunar(datos_luna):
     fig, ax = plt.subplots(figsize=(8, 8), subplot_kw={'projection': 'polar'})
@@ -37,10 +48,9 @@ def generar_circulo_lunar(datos_luna):
         ax.plot(theta, r, color=colores[i], lw=2)
         ax.fill_between(theta, 0, r, color=colores[i], alpha=0.5)
     
-    for dato in datos_luna:
-        theta = np.deg2rad(dato['grado'])
-        r = 1.2
-        ax.text(theta, r, f"{dato['signo']} {dato['grado']}°", ha='center', va='center')
+    theta = np.deg2rad(datos_luna['fase'] * 360 / 100)
+    r = 1.2
+    ax.text(theta, r, f"{datos_luna['signo']} {datos_luna['fase']}%", ha='center', va='center')
     
     ax.set_rticks([])
     ax.set_yticklabels([])
@@ -50,5 +60,3 @@ def generar_circulo_lunar(datos_luna):
 
 if __name__ == '__main__':
     app.run(debug=True)
-    
-    
