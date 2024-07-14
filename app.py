@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from astroquery.jplhorizons import Horizons
 import os
+import re
 
 app = Flask(__name__)
 
@@ -14,13 +15,34 @@ def index():
 def generate():
     fecha = request.form['fecha']
     lugar = request.form['lugar']
-    datos_luna = obtener_datos_luna(fecha, lugar)
-    generar_circulo_lunar(datos_luna)
-    return render_template('index.html', message="Círculo lunar generado con éxito")
+    
+    # Validar formato de la fecha
+    if not re.match(r'\d{2}/\d{2}/\d{4}', fecha):
+        return render_template('index.html', message="Formato de fecha no válido. Use DD/MM/YYYY.")
+    
+    # Convertir la fecha al formato YYYY-MM-DD para Horizons
+    fecha = convertir_fecha(fecha)
+    
+    # Validar lugar
+    if not lugar:
+        lugar = 'geo'  # Puedes cambiar esto a una ubicación predeterminada válida
+    
+    try:
+        datos_luna = obtener_datos_luna(fecha, lugar)
+        generar_circulo_lunar(datos_luna)
+        return render_template('index.html', message="Círculo lunar generado con éxito")
+    except Exception as e:
+        return render_template('index.html', message=f"Error al generar el círculo lunar: {str(e)}")
+
+def convertir_fecha(fecha):
+    # Convertir DD/MM/YYYY a YYYY-MM-DD
+    dia, mes, año = fecha.split('/')
+    return f"{año}-{mes}-{dia}"
 
 def obtener_datos_luna(fecha, lugar):
-    # Aquí usamos JPL Horizons para obtener los datos de la Luna
-    obj = Horizons(id='301', location=lugar, epochs=fecha, id_type='majorbody')
+    # Convertir la fecha al formato que Horizons espera
+    fecha_horizons = fecha + ' 00:00'
+    obj = Horizons(id='301', location=lugar, epochs=fecha_horizons, id_type='majorbody')
     eph = obj.ephemerides()
     datos_luna = {
         'fase': eph['illumination'][0],  # Porcentaje de iluminación de la Luna
