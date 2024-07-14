@@ -25,8 +25,9 @@ def generate():
     
     # Validar lugar
     if not lugar:
-        lugar = 'geo@399'  # Puedes cambiar esto a una ubicación predeterminada válida
-    
+        lugar = 'geo'  # Puedes cambiar esto a una ubicación predeterminada válida
+        lugar = 'coord@399'  # Coordenadas específicas (latitud, longitud, altitud)
+
     try:
         datos_luna = obtener_datos_luna(fecha, lugar)
         generar_circulo_lunar(datos_luna)
@@ -44,15 +45,16 @@ def obtener_datos_luna(fecha, lugar):
     # Convertir la fecha al formato que Horizons espera
     fecha_horizons = fecha + ' 00:00'
     
-    # Usar una ubicación fija para depuración (coordenadas de Greenwich)
-    lugar = 'geo@399'  # Código estándar para la Tierra en Horizons
-    
+    # Usar coordenadas de Greenwich para depuración
+    lugar = 'geo'  # Es el valor genérico para la Tierra
+    lugar = 'coord@399'  # Coordenadas específicas (latitud, longitud, altitud)
+
     # Imprimir los parámetros para depuración
     print(f"Fecha para Horizons: {fecha_horizons}, Lugar: {lugar}")
     
     # Configurar los parámetros de la consulta de Horizons
     try:
-        obj = Horizons(id='301', location=lugar, epochs=fecha_horizons, id_type='majorbody')
+        obj = Horizons(id='301', location='geo', epochs=fecha_horizons, id_type='majorbody')
         eph = obj.ephemerides()
         print(eph)  # Imprimir el resultado de la consulta para depuración
         
@@ -98,3 +100,4 @@ def generar_circulo_lunar(datos_luna):
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8000))
     app.run(host='0.0.0.0', port=port)
+    
