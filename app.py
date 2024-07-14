@@ -25,7 +25,7 @@ def generate():
     
     # Validar lugar
     if not lugar:
-        lugar = 'geo'  # Puedes cambiar esto a una ubicación predeterminada válida
+        lugar = 'geo@399'  # Puedes cambiar esto a una ubicación predeterminada válida
     
     try:
         datos_luna = obtener_datos_luna(fecha, lugar)
