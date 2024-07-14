@@ -1,6 +1,6 @@
-swisseph
+Flask
+gunicorn
+matplotlib
 astroquery
 astropy
-Flask
-matplotlib
 
