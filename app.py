@@ -32,7 +32,8 @@ def generate():
         generar_circulo_lunar(datos_luna)
         return render_template('index.html', message="Círculo lunar generado con éxito")
     except Exception as e:
-        return render_template('index.html', message=f"Error al generar el círculo lunar: {str(e)}")
+        # Incluir detalles de depuración en el mensaje de error
+        return render_template('index.html', message=f"Error al generar el círculo lunar: {str(e)}\nDetalles: {repr(e)}")
 
 def convertir_fecha(fecha):
     # Convertir DD/MM/YYYY a YYYY-MM-DD
@@ -84,7 +85,7 @@ def generar_circulo_lunar(datos_luna):
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8000))
     app.run(host='0.0.0.0', port=port)
-    except Exception as e:
+
     return render_template('index.html', message=f"Error al generar el círculo lunar: {str(e)}\nDetalles: {repr(e)}")
 
 
