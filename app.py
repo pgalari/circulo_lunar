@@ -43,9 +43,15 @@ def convertir_fecha(fecha):
 def obtener_datos_luna(fecha, lugar):
     # Convertir la fecha al formato que Horizons espera
     fecha_horizons = fecha + ' 00:00'
+    
+    # Imprimir los parámetros para depuración
+    print(f"Fecha para Horizons: {fecha_horizons}, Lugar: {lugar}")
+    
     # Configurar los parámetros de la consulta de Horizons
     obj = Horizons(id='301', location=lugar, epochs=fecha_horizons, id_type='majorbody')
     eph = obj.ephemerides()
+    print(eph)  # Imprimir el resultado de la consulta para depuración
+    
     datos_luna = {
         'fase': eph['illumination'][0],  # Porcentaje de iluminación de la Luna
         'signo': obtener_signo_zodiacal(eph['RA'][0])
@@ -85,3 +91,4 @@ def generar_circulo_lunar(datos_luna):
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8000))
     app.run(host='0.0.0.0', port=port)
+
