@@ -62,6 +62,7 @@ def obtener_datos_luna(fecha, lugar):
             'fase': eph['illumination'][0],  # Porcentaje de iluminación de la Luna
             'signo': obtener_signo_zodiacal(eph['RA'][0])
         }
+        print(datos_luna)  # Imprimir el resultado de la consulta para depuración
         return datos_luna
     except Exception as e:
         print(f"Error en la consulta a Horizons: {e}")
