@@ -44,6 +44,9 @@ def obtener_datos_luna(fecha, lugar):
     # Convertir la fecha al formato que Horizons espera
     fecha_horizons = fecha + ' 00:00'
     
+    # Usar una ubicación fija para depuración (coordenadas de Greenwich)
+    lugar = 'geo@399'  # Código estándar para la Tierra en Horizons
+    
     # Imprimir los parámetros para depuración
     print(f"Fecha para Horizons: {fecha_horizons}, Lugar: {lugar}")
     
