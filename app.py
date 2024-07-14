@@ -48,15 +48,19 @@ def obtener_datos_luna(fecha, lugar):
     print(f"Fecha para Horizons: {fecha_horizons}, Lugar: {lugar}")
     
     # Configurar los parámetros de la consulta de Horizons
-    obj = Horizons(id='301', location=lugar, epochs=fecha_horizons, id_type='majorbody')
-    eph = obj.ephemerides()
-    print(eph)  # Imprimir el resultado de la consulta para depuración
-    
-    datos_luna = {
-        'fase': eph['illumination'][0],  # Porcentaje de iluminación de la Luna
-        'signo': obtener_signo_zodiacal(eph['RA'][0])
-    }
-    return datos_luna
+    try:
+        obj = Horizons(id='301', location=lugar, epochs=fecha_horizons, id_type='majorbody')
+        eph = obj.ephemerides()
+        print(eph)  # Imprimir el resultado de la consulta para depuración
+        
+        datos_luna = {
+            'fase': eph['illumination'][0],  # Porcentaje de iluminación de la Luna
+            'signo': obtener_signo_zodiacal(eph['RA'][0])
+        }
+        return datos_luna
+    except Exception as e:
+        print(f"Error en la consulta a Horizons: {e}")
+        raise
 
 def obtener_signo_zodiacal(ra):
     # Función simplificada para obtener el signo zodiacal basado en la Ascensión Recta (RA)
@@ -91,4 +95,5 @@ def generar_circulo_lunar(datos_luna):
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8000))
     app.run(host='0.0.0.0', port=port)
+
 
