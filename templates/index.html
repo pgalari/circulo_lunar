@@ -1,24 +1,25 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <title>Círculo Lunar</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Generador de Círculo Lunar</h1>
+    <h1>Generar Círculo Lunar</h1>
     <form action="/generate" method="post">
-        <label for="fecha">Fecha de inicio:</label>
-        <input type="date" id="fecha" name="fecha" required><br><br>
-        <label for="lugar">Lugar:</label>
-        <input type="text" id="lugar" name="lugar" required><br><br>
+        <label for="fecha">Fecha (DD/MM/YYYY):</label>
+        <input type="text" id="fecha" name="fecha" required>
+        <br>
+        <label for="lugar">Lugar (geo o código de observatorio):</label>
+        <input type="text" id="lugar" name="lugar" required>
+        <br>
         <input type="submit" value="Generar">
     </form>
     {% if message %}
         <p>{{ message }}</p>
-        <img src="{{ url_for('static', filename='circulo_lunar.png') }}" alt="Círculo Lunar">
     {% endif %}
+    <img src="/static/circulo_lunar.png" alt="Círculo Lunar">
 </body>
 </html>
-
