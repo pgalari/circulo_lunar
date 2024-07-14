@@ -5,7 +5,7 @@ from astroquery.jplhorizons import Horizons
 import os
 import re
 
-app = Flask(__name__)
+
 
 @app.route('/')
 def index():
@@ -44,6 +44,8 @@ def convertir_fecha(fecha):
 def obtener_datos_luna(fecha, lugar):
     # Convertir la fecha al formato que Horizons espera
     fecha_horizons = fecha + ' 00:00'
+    fecha_inicio = '2024-07-15'
+    fecha_fin = '2024-07-16'
     
     # Usar coordenadas de Greenwich para depuración
     lugar = 'geo'  # Es el valor genérico para la Tierra
@@ -54,7 +56,8 @@ def obtener_datos_luna(fecha, lugar):
     
     # Configurar los parámetros de la consulta de Horizons
     try:
-        obj = Horizons(id='301', location='geo', epochs=fecha_horizons, id_type='majorbody')
+        # Configurar los parámetros de la consulta de Horizons
+        obj = Horizons(id='301', location=lugar, start=fecha_inicio, end=fecha_fin, id_type='majorbody')
         eph = obj.ephemerides()
         print(eph)  # Imprimir el resultado de la consulta para depuración
         
@@ -67,6 +70,7 @@ def obtener_datos_luna(fecha, lugar):
     except Exception as e:
         print(f"Error en la consulta a Horizons: {e}")
         raise
+
 
 def obtener_signo_zodiacal(ra):
     # Función simplificada para obtener el signo zodiacal basado en la Ascensión Recta (RA)
