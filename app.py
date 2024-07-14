@@ -42,6 +42,7 @@ def convertir_fecha(fecha):
 def obtener_datos_luna(fecha, lugar):
     # Convertir la fecha al formato que Horizons espera
     fecha_horizons = fecha + ' 00:00'
+    # Configurar los parámetros de la consulta de Horizons
     obj = Horizons(id='301', location=lugar, epochs=fecha_horizons, id_type='majorbody')
     eph = obj.ephemerides()
     datos_luna = {
@@ -83,4 +84,7 @@ def generar_circulo_lunar(datos_luna):
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8000))
     app.run(host='0.0.0.0', port=port)
+    except Exception as e:
+    return render_template('index.html', message=f"Error al generar el círculo lunar: {str(e)}\nDetalles: {repr(e)}")
+
 
